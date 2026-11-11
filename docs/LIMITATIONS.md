@@ -55,6 +55,9 @@
 
 ## Software and deployment
 
+- The interface is fully localised (Turkish default, English), but diagnostic messages generated
+  by the engine (verification details, calibration notes, validation assumptions, error messages)
+  are in English only.
 - Workspace separation in hosted mode is not authentication (see `DATA_GOVERNANCE.md`).
 - SQLite suits single-instance deployments; horizontal scaling would require a server database.
 - The Dockerfiles and the Render blueprint were written but could not be built in the development

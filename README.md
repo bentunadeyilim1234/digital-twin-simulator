@@ -85,7 +85,7 @@ scripts/test_all.sh
 
 | Suite | Command | Count |
 |---|---|---|
-| Engine, analytics, API (pytest) | `cd backend && .venv/bin/python -m pytest -q` | 88 |
+| Engine, analytics, API (pytest) | `cd backend && .venv/bin/python -m pytest -q` | 89 |
 | Frontend units (vitest) | `cd frontend && npx vitest run` | 15 |
 | Type check | `cd frontend && npx tsc --noEmit` | — |
 | End-to-end (Playwright, real stack) | `cd frontend && npx playwright test --trace off` | 5 specs |

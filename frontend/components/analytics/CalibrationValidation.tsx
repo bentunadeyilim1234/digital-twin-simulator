@@ -107,7 +107,7 @@ export function LsqTab() {
               {res.n_holdout > 0 && <p className="text-[11px] text-muted">{t("analytics.holdout")}: {res.periods[res.n_calibration]} → {res.periods[res.periods.length - 1]}</p>}
             </Panel>
           </div>
-          <Panel title="Assumptions"><ul className="list-disc space-y-0.5 pl-5 text-xs text-ink-2">{res.assumptions.map((a) => <li key={a}>{a}</li>)}</ul></Panel>
+          <Panel title={t("lab.assumptions")}><ul className="list-disc space-y-0.5 pl-5 text-xs text-ink-2">{res.assumptions.map((a) => <li key={a}>{a}</li>)}</ul></Panel>
         </>
       )}
     </div>
@@ -176,7 +176,7 @@ export function BayesTab() {
               bands={[{ id: "pp", label: "P5–P95", color: SERIES[0], lo: res.predictive[target].p5, hi: res.predictive[target].p95 }]}
               series={[{ id: "obs", label: t("analytics.observed"), color: "#b4bcc7", data: res.predictive[target].observed, width: 1.5 }, { id: "p50", label: t("analytics.median"), color: SERIES[0], data: res.predictive[target].p50 }]} />
           </Panel>
-          <Panel title="Assumptions"><ul className="list-disc space-y-0.5 pl-5 text-xs text-ink-2">{res.assumptions.map((a) => <li key={a}>{a}</li>)}</ul></Panel>
+          <Panel title={t("lab.assumptions")}><ul className="list-disc space-y-0.5 pl-5 text-xs text-ink-2">{res.assumptions.map((a) => <li key={a}>{a}</li>)}</ul></Panel>
         </>
       )}
     </div>

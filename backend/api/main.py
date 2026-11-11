@@ -93,6 +93,7 @@ def _seed_unlocked(ws: str) -> None:
         sc["id"] = f"{t['id'].lower()}_{ws[:8]}_{db.new_id('x')[-6:]}"
         db.upsert_scenario(ws, sc)
     ds = generate(cfg, months=36, seed=42, name="Synthetic demonstration series (seed 42)")
+    ds["quality"] = quality_report(ds)
     db.save_dataset(ws, ds)
     db.mark_seeded(ws)
 
@@ -739,7 +740,12 @@ def report(body: ReportBody, ws: str = Depends(workspace)):
 # ----------------------------------------------------------------------------- datasets
 @app.get("/api/datasets")
 def datasets(ws: str = Depends(workspace)) -> list[dict[str, Any]]:
-    return db.list_datasets(ws)
+    out = db.list_datasets(ws)
+    for d in out:
+        if not d.get("quality"):  # datasets stored before quality reports were attached
+            full = db.get_dataset(ws, d["id"])
+            d["quality"] = quality_report(full) if full else None
+    return out
 
 
 @app.get("/api/datasets/{did}")

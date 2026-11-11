@@ -189,3 +189,8 @@ def test_concurrent_first_requests_seed_once(tmp_db):
         list(ex.map(lambda p: c.get(p), ["/api/meta", "/api/model", "/api/scenarios", "/api/datasets", "/api/overview", "/api/scenarios"]))
     assert len(c.get("/api/scenarios").json()) == 5
     assert len(c.get("/api/datasets").json()) == 1
+
+
+def test_seeded_dataset_has_quality_report(client):
+    ds = client.get("/api/datasets").json()
+    assert ds[0]["quality"] and ds[0]["quality"]["n_periods"] == 36
