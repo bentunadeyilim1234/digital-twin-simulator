@@ -1,0 +1,257 @@
+{
+  "schema_version": "1.0.0",
+  "model_id": "ssrdt-demo-v1",
+  "parameter_set": {
+    "name": "Illustrative demonstration parameter set v1",
+    "status": "ILLUSTRATIVE",
+    "statement": {
+      "en": "All coefficients in this file are illustrative assumptions chosen to produce plausible demonstration dynamics. None has been estimated from data or derived from a published effect size. They must not be interpreted as empirical findings.",
+      "tr": "Bu dosyadaki tüm katsayılar, makul gösterim dinamikleri üretmek için seçilmiş açıklayıcı varsayımlardır. Hiçbiri veriden tahmin edilmemiş ya da yayımlanmış bir etki büyüklüğünden türetilmemiştir. Ampirik bulgu olarak yorumlanmamalıdır."
+    }
+  },
+  "time": {"step": "month", "default_horizon": 12, "max_horizon": 60, "calendar_start_month": 9},
+  "domains": [
+    {"id": "ENV", "labels": {"en": "Physical & Environmental Conditions", "tr": "Fiziksel ve Çevresel Koşullar"}, "variables": ["E", "F", "O", "M"]},
+    {"id": "SOC", "labels": {"en": "Social School Climate", "tr": "Sosyal Okul İklimi"}, "variables": ["C", "T", "J", "H"]},
+    {"id": "ORG", "labels": {"en": "Organizational Processes", "tr": "Örgütsel Süreçler"}, "variables": ["A", "R", "L", "K"]},
+    {"id": "SUP", "labels": {"en": "Support & Preparedness", "tr": "Destek ve Hazırlık"}, "variables": ["S", "TR", "P", "IF"]}
+  ],
+  "variables": [
+    {
+      "id": "ENV-01", "symbol": "E", "key": "environmental_comfort", "domain": "ENV", "role": "state", "initial": 0.70,
+      "labels": {"en": "Environmental comfort", "tr": "Çevresel konfor"},
+      "definition": {"en": "Aggregate share of occupied classroom/common-area hours in which temperature, humidity, CO2 and noise indicators fall within reference comfort ranges.", "tr": "Kullanılan sınıf ve ortak alan saatlerinde sıcaklık, nem, CO2 ve gürültü göstergelerinin referans konfor aralıklarında kaldığı sürenin toplulaştırılmış oranı."},
+      "measurement": {"unit": "% of occupied hours", "lower": 0, "upper": 100, "direction": "positive", "sources": ["Environmental sensor aggregates (temperature, humidity, CO2, noise)", "Facility comfort audits"], "components": [
+        {"name": "CO2 concentration (mean, occupied hours)", "unit": "ppm", "lower": 600, "upper": 1800, "direction": "negative"},
+        {"name": "Noise level (mean, occupied hours)", "unit": "dB(A)", "lower": 35, "upper": 70, "direction": "negative"},
+        {"name": "Thermal comfort compliance", "unit": "%", "lower": 0, "upper": 100, "direction": "positive"}
+      ]},
+      "measurement_evidence": "E2", "references": ["en16798", "haverinen2011", "barrett2015"],
+      "notes": "Physical condition indicator only. Never used as an indicator of individual behaviour or dangerousness."
+    },
+    {
+      "id": "ENV-02", "symbol": "F", "key": "physical_maintenance", "domain": "ENV", "role": "context", "initial": 0.75,
+      "labels": {"en": "Physical maintenance readiness", "tr": "Fiziksel bakım hazırlığı"},
+      "definition": {"en": "Share of scheduled maintenance inspections and repairs completed on time.", "tr": "Planlanan bakım denetimleri ve onarımlarının zamanında tamamlanma oranı."},
+      "measurement": {"unit": "% completed on time", "lower": 0, "upper": 100, "direction": "positive", "sources": ["Maintenance work-order records", "Inspection logs"]},
+      "measurement_evidence": "H", "references": [], "notes": "Local process indicator; definition requires local operationalisation."
+    },
+    {
+      "id": "ENV-03", "symbol": "O", "key": "space_suitability", "domain": "ENV", "role": "context", "initial": 0.65,
+      "labels": {"en": "Space utilization suitability", "tr": "Mekân kullanım uygunluğu"},
+      "definition": {"en": "Share of scheduled activities held in spaces rated suitable for the activity (capacity, layout, equipment).", "tr": "Planlanan etkinliklerin nitelik, kapasite ve donanım açısından uygun mekânlarda yapılma oranı."},
+      "measurement": {"unit": "% of scheduled activities", "lower": 0, "upper": 100, "direction": "positive", "sources": ["Timetable/space allocation aggregates", "Space audits"]},
+      "measurement_evidence": "H", "references": ["barrett2015"], "notes": ""
+    },
+    {
+      "id": "ENV-04", "symbol": "M", "key": "communication_readiness", "domain": "ENV", "role": "context", "initial": 0.80,
+      "labels": {"en": "Communication infrastructure readiness", "tr": "İletişim altyapısı hazırlığı"},
+      "definition": {"en": "Share of periodic tests of internal communication infrastructure (announcement, notification and network systems) passed.", "tr": "Okul içi iletişim altyapısının (duyuru, bildirim ve ağ sistemleri) periyodik testlerden başarıyla geçme oranı."},
+      "measurement": {"unit": "% of tests passed", "lower": 0, "upper": 100, "direction": "positive", "sources": ["Infrastructure test logs"]},
+      "measurement_evidence": "H", "references": ["rems2013"], "notes": "Aggregate test results only; no device locations are recorded or visualised."
+    },
+    {
+      "id": "SOC-01", "symbol": "C", "key": "school_belonging", "domain": "SOC", "role": "state", "initial": 0.65,
+      "labels": {"en": "School belonging", "tr": "Okula aidiyet"},
+      "definition": {"en": "Anonymous aggregate mean of a validated school-belonging/connectedness scale.", "tr": "Geçerliği sınanmış bir okula aidiyet/bağlılık ölçeğinin anonim, toplulaştırılmış ortalaması."},
+      "measurement": {"unit": "scale mean (1-5 Likert)", "lower": 1, "upper": 5, "direction": "positive", "sources": ["EDSCLS engagement items", "PSSM (Goodenow, 1993)", "Validated Turkish school-climate instruments"]},
+      "measurement_evidence": "E1", "references": ["goodenow1993", "edscls", "cdc2009"], "notes": "Symbol C = school belonging. Do not confuse with C_flow (completed process flow)."
+    },
+    {
+      "id": "SOC-02", "symbol": "T", "key": "institutional_trust", "domain": "SOC", "role": "state", "initial": 0.50,
+      "labels": {"en": "Institutional trust", "tr": "Kurumsal güven"},
+      "definition": {"en": "Anonymous aggregate mean of trust in the school as an institution and in its processes.", "tr": "Okula bir kurum olarak ve süreçlerine duyulan güvenin anonim, toplulaştırılmış ortalaması."},
+      "measurement": {"unit": "scale mean (1-5 Likert)", "lower": 1, "upper": 5, "direction": "positive", "sources": ["EDSCLS relationship items", "Validated Turkish school-climate instruments"]},
+      "measurement_evidence": "E2", "references": ["bryk_schneider2002", "edscls"], "notes": ""
+    },
+    {
+      "id": "SOC-03", "symbol": "J", "key": "perceived_fairness", "domain": "SOC", "role": "context", "initial": 0.70,
+      "labels": {"en": "Perceived fairness", "tr": "Algılanan adalet"},
+      "definition": {"en": "Anonymous aggregate perception that rules and procedures are applied fairly and consistently.", "tr": "Kural ve uygulamaların adil ve tutarlı uygulandığına ilişkin anonim, toplulaştırılmış algı."},
+      "measurement": {"unit": "scale mean (1-5 Likert)", "lower": 1, "upper": 5, "direction": "positive", "sources": ["EDSCLS rules/discipline items", "Validated Turkish school-climate instruments"]},
+      "measurement_evidence": "E2", "references": ["gregory2010", "edscls"], "notes": ""
+    },
+    {
+      "id": "SOC-04", "symbol": "H", "key": "help_seeking_culture", "domain": "SOC", "role": "context", "initial": 0.60,
+      "labels": {"en": "Help-seeking culture", "tr": "Yardım arama kültürü"},
+      "definition": {"en": "Anonymous aggregate willingness to seek help from school staff when needed.", "tr": "Gerektiğinde okul personelinden yardım isteme konusundaki anonim, toplulaştırılmış isteklilik."},
+      "measurement": {"unit": "scale mean (1-5 Likert)", "lower": 1, "upper": 5, "direction": "positive", "sources": ["Help-seeking attitude items (cf. Eliot et al., 2010)"]},
+      "measurement_evidence": "E2", "references": ["eliot2010", "williams2006"], "notes": "Observed context indicator that also responds to trust (H4) as a lagged deviation from its observed path."
+    },
+    {
+      "id": "ORG-01", "symbol": "A", "key": "support_accessibility", "domain": "ORG", "role": "state", "initial": 0.55,
+      "labels": {"en": "Accessibility of support channels", "tr": "Destek kanallarının erişilebilirliği"},
+      "definition": {"en": "Institutional composite of awareness, availability hours and usability of support channels.", "tr": "Destek kanallarının bilinirliği, erişim saatleri ve kullanılabilirliğine ilişkin kurumsal bileşik gösterge."},
+      "measurement": {"unit": "% composite", "lower": 0, "upper": 100, "direction": "positive", "sources": ["Channel availability logs", "Anonymous awareness survey aggregates"]},
+      "measurement_evidence": "H", "references": ["forsberg2023"], "notes": "Higher accessibility is expected to raise incoming support requests. This is NOT an increase in risk."
+    },
+    {
+      "id": "ORG-02", "symbol": "R", "key": "timely_completion", "domain": "ORG", "role": "derived", "initial": 0.60,
+      "labels": {"en": "Timely process completion", "tr": "Süreçlerin zamanında tamamlanması"},
+      "definition": {"en": "Share of open support-process workload completed within the period (model: completion ratio C_flow/(Q+I)).", "tr": "Dönem içindeki açık destek süreci iş yükünün tamamlanan oranı (model: tamamlama oranı C_flow/(Q+I))."},
+      "measurement": {"unit": "% completed within target time", "lower": 0, "upper": 100, "direction": "positive", "sources": ["Aggregate process records (counts only)"]},
+      "measurement_evidence": "H", "references": [], "notes": "Derived from the stock-flow block in model-calculated mode."
+    },
+    {
+      "id": "ORG-03", "symbol": "L", "key": "followup_continuity", "domain": "ORG", "role": "derived", "initial": 0.55,
+      "labels": {"en": "Follow-up continuity", "tr": "İzlem sürekliliği"},
+      "definition": {"en": "Share of completed processes with planned follow-up carried out on time.", "tr": "Tamamlanan süreçlerde planlanan izlemlerin zamanında yapılma oranı."},
+      "measurement": {"unit": "% with timely follow-up", "lower": 0, "upper": 100, "direction": "positive", "sources": ["Aggregate process records (counts only)"]},
+      "measurement_evidence": "H", "references": [], "notes": "Derived via the follow-up equation in model-calculated mode."
+    },
+    {
+      "id": "ORG-04", "symbol": "K", "key": "institutional_coordination", "domain": "ORG", "role": "state", "initial": 0.65,
+      "labels": {"en": "Institutional coordination", "tr": "Kurumsal koordinasyon"},
+      "definition": {"en": "Share of planned inter-unit coordination meetings and agreed actions completed.", "tr": "Birimler arası planlanan koordinasyon toplantıları ve kararlaştırılan eylemlerin gerçekleştirilme oranı."},
+      "measurement": {"unit": "% completed", "lower": 0, "upper": 100, "direction": "positive", "sources": ["Meeting and action logs"]},
+      "measurement_evidence": "H", "references": [], "notes": ""
+    },
+    {
+      "id": "SUP-01", "symbol": "S", "key": "support_capacity", "domain": "SUP", "role": "state", "initial": 0.55,
+      "labels": {"en": "Support capacity", "tr": "Destek kapasitesi"},
+      "definition": {"en": "Professional support hours per month available to the school (normalised). Converted to processing capacity in the stock-flow block.", "tr": "Okulun kullanabildiği aylık profesyonel destek saatleri (normalize). Stok-akış bloğunda işlem kapasitesine dönüştürülür."},
+      "measurement": {"unit": "hours / month", "lower": 0, "upper": 320, "direction": "positive", "sources": ["Staffing schedules (aggregate hours)"]},
+      "measurement_evidence": "E2", "references": ["asca_ratio"], "notes": "Bounds [0, 320] h/month define the hours conversion used by the stock-flow block."
+    },
+    {
+      "id": "SUP-02", "symbol": "TR", "key": "staff_training", "domain": "SUP", "role": "context", "initial": 0.70,
+      "labels": {"en": "Staff training readiness", "tr": "Personel eğitim hazırlığı"},
+      "definition": {"en": "Share of staff who have completed required institutional training.", "tr": "Gerekli kurumsal eğitimleri tamamlamış personel oranı."},
+      "measurement": {"unit": "% of staff", "lower": 0, "upper": 100, "direction": "positive", "sources": ["Training completion records (aggregate)"]},
+      "measurement_evidence": "H", "references": ["rems2013"], "notes": "Observed context indicator; responds to the training intervention as a lagged deviation."
+    },
+    {
+      "id": "SUP-03", "symbol": "P", "key": "operational_preparedness", "domain": "SUP", "role": "state", "initial": 0.60,
+      "labels": {"en": "Operational preparedness", "tr": "Operasyonel hazırlık"},
+      "definition": {"en": "Aggregate share of preparedness checklist items met in planned exercises and reviews.", "tr": "Planlı tatbikat ve değerlendirmelerde karşılanan hazırlık kontrol maddelerinin toplulaştırılmış oranı."},
+      "measurement": {"unit": "% checklist items met", "lower": 0, "upper": 100, "direction": "positive", "sources": ["Exercise after-action summaries (aggregate)"]},
+      "measurement_evidence": "E2", "references": ["rems2013"], "notes": "Aggregate institutional score; no tactical or location detail is stored."
+    },
+    {
+      "id": "SUP-04", "symbol": "IF", "key": "improvement_followthrough", "domain": "SUP", "role": "context", "initial": 0.50,
+      "labels": {"en": "Improvement follow-through", "tr": "İyileştirme takibi"},
+      "definition": {"en": "Share of planned institutional improvement actions completed on schedule.", "tr": "Planlanan kurumsal iyileştirme eylemlerinin zamanında tamamlanma oranı."},
+      "measurement": {"unit": "% actions completed", "lower": 0, "upper": 100, "direction": "positive", "sources": ["Improvement plan records"]},
+      "measurement_evidence": "H", "references": ["rems2013"], "notes": "Observed context indicator; responds to the follow-through intervention as a lagged deviation."
+    }
+  ],
+  "flow_nodes": [
+    {"key": "Q", "labels": {"en": "Pending support processes", "tr": "Bekleyen destek süreçleri"}, "unit": "processes", "kind": "stock"},
+    {"key": "I", "labels": {"en": "Incoming support requests", "tr": "Gelen destek talepleri"}, "unit": "processes / month", "kind": "inflow"},
+    {"key": "C_flow", "labels": {"en": "Completed support processes", "tr": "Tamamlanan destek süreçleri"}, "unit": "processes / month", "kind": "outflow"},
+    {"key": "mu", "labels": {"en": "Processing capacity", "tr": "İşlem kapasitesi"}, "unit": "processes / month", "kind": "auxiliary"},
+    {"key": "Qp", "labels": {"en": "Backlog pressure", "tr": "Birikim baskısı"}, "unit": "dimensionless [0,1)", "kind": "auxiliary"},
+    {"key": "flex", "labels": {"en": "Reallocated support hours", "tr": "Yeniden tahsis edilen destek saatleri"}, "unit": "hours / month", "kind": "stock"}
+  ],
+  "interventions": [
+    {"key": "U_environment", "labels": {"en": "Environmental improvement programme", "tr": "Çevresel iyileştirme programı"}, "cost_param": "cost.U_environment"},
+    {"key": "U_access", "labels": {"en": "Support-channel accessibility programme", "tr": "Destek kanalı erişilebilirlik programı"}, "cost_param": "cost.U_access"},
+    {"key": "U_coordination", "labels": {"en": "Coordination improvement programme", "tr": "Koordinasyon geliştirme programı"}, "cost_param": "cost.U_coordination"},
+    {"key": "U_capacity", "labels": {"en": "Support capacity expansion", "tr": "Destek kapasitesi artırımı"}, "cost_param": "cost.U_capacity"},
+    {"key": "U_training", "labels": {"en": "Staff training programme", "tr": "Personel eğitim programı"}, "cost_param": "cost.U_training"},
+    {"key": "U_followthrough", "labels": {"en": "Improvement follow-through programme", "tr": "İyileştirme takip programı"}, "cost_param": "cost.U_followthrough"}
+  ],
+  "external_conditions": [
+    {"key": "resource_availability", "default": 0.60, "labels": {"en": "Resource availability", "tr": "Kaynak erişilebilirliği"}, "description": {"en": "Budget and material resources available to the school (0 = none, 1 = fully adequate).", "tr": "Okulun kullanabildiği bütçe ve maddi kaynaklar (0 = yok, 1 = tamamen yeterli)."}},
+    {"key": "staff_turnover", "default": 0.10, "labels": {"en": "Staff turnover", "tr": "Personel devir hızı"}, "description": {"en": "Share of staff positions changing during the year (0-1).", "tr": "Yıl içinde değişen personel kadrolarının oranı (0-1)."}},
+    {"key": "academic_load", "default": 0.50, "labels": {"en": "Academic calendar load", "tr": "Akademik takvim yükü"}, "description": {"en": "Seasonal academic load (0.5 = neutral; higher during exam periods). Scales generic support demand.", "tr": "Mevsimsel akademik yük (0,5 = nötr; sınav dönemlerinde yüksek). Genel destek talebini ölçekler."}}
+  ],
+  "edges": [
+    {"id": "ENV-F-E", "source": "F", "target": "E", "kind": "linear", "sign": 1, "coefficient": 0.20, "range": [0.10, 0.30], "symbol": "α_EF", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Maintenance readiness contributes to environmental comfort.", "tr": "Bakım hazırlığı çevresel konfora katkıda bulunur."}, "notes": ""},
+    {"id": "ENV-O-E", "source": "O", "target": "E", "kind": "linear", "sign": 1, "coefficient": 0.12, "range": [0.05, 0.20], "symbol": "α_EO", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Suitable space allocation contributes to environmental comfort.", "tr": "Uygun mekân kullanımı çevresel konfora katkıda bulunur."}, "notes": ""},
+    {"id": "ENV-M-E", "source": "M", "target": "E", "kind": "linear", "sign": 1, "coefficient": 0.05, "range": [0.0, 0.10], "symbol": "α_EM", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Communication infrastructure (e.g. fault reporting) weakly supports comfort management.", "tr": "İletişim altyapısı (ör. arıza bildirimi) konfor yönetimini zayıf biçimde destekler."}, "notes": "Included because the specified E* equation contains α_EM; weak plausibility, candidate for removal after review."},
+    {"id": "U-ENV-E", "source": "U_environment", "target": "E", "kind": "linear", "sign": 1, "coefficient": 0.25, "range": [0.10, 0.40], "symbol": "α_EU", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Environmental improvement programme raises target environmental comfort.", "tr": "Çevresel iyileştirme programı hedef çevresel konforu yükseltir."}, "notes": "Intervention effect size is illustrative."},
+    {"id": "SOC-T-C", "source": "T", "target": "C", "kind": "linear", "sign": 1, "coefficient": 0.20, "range": [0.10, 0.30], "symbol": "α_CT", "hypothesis": null, "evidence": "E2", "confidence": "medium", "references": ["thapa2013", "wang_degol2016"], "enabled": true, "description": {"en": "Trusting relationships are associated with stronger belonging.", "tr": "Güvene dayalı ilişkiler daha güçlü aidiyetle ilişkilidir."}, "notes": "Literature is largely correlational; direction is assumed."},
+    {"id": "H5", "source": "S", "target": "C", "kind": "linear", "sign": 1, "coefficient": 0.15, "range": [0.05, 0.25], "symbol": "α_CS", "hypothesis": "H5", "evidence": "E2", "confidence": "medium", "references": ["allen2018", "cdc2009"], "enabled": true, "description": {"en": "Institutional support capacity may positively influence school belonging.", "tr": "Kurumsal destek kapasitesi okula aidiyeti olumlu etkileyebilir."}, "notes": "Allen et al. (2018) concerns teacher support; extension to professional support capacity is an assumption."},
+    {"id": "SOC-J-C", "source": "J", "target": "C", "kind": "linear", "sign": 1, "coefficient": 0.15, "range": [0.05, 0.25], "symbol": "α_CJ", "hypothesis": null, "evidence": "E2", "confidence": "medium", "references": ["thapa2013"], "enabled": true, "description": {"en": "Perceived fairness supports belonging.", "tr": "Algılanan adalet aidiyeti destekler."}, "notes": ""},
+    {"id": "H10", "source": "E", "target": "C", "kind": "linear", "sign": 1, "coefficient": 0.08, "range": [0.0, 0.15], "symbol": "α_CE", "hypothesis": "H10", "evidence": "E2", "confidence": "low", "references": ["maxwell2016", "barrett2015"], "enabled": true, "description": {"en": "Adequate environmental and physical conditions may contribute to a more supportive school experience.", "tr": "Yeterli çevresel ve fiziksel koşullar daha destekleyici bir okul deneyimine katkıda bulunabilir."}, "notes": "Evidence concerns building condition and perceived social climate/achievement, not belonging directly."},
+    {"id": "H1", "source": "J", "target": "T", "kind": "linear", "sign": 1, "coefficient": 0.25, "range": [0.10, 0.35], "symbol": "α_TJ", "hypothesis": "H1", "evidence": "E2", "confidence": "medium", "references": ["tyler_huo2002", "arum2003", "gregory2010"], "enabled": true, "description": {"en": "Perceived fairness positively influences institutional trust.", "tr": "Algılanan adalet kurumsal güveni olumlu etkiler."}, "notes": "Procedural-justice evidence is mostly from non-school institutions."},
+    {"id": "H2", "source": "L", "target": "T", "kind": "linear", "sign": 1, "coefficient": 0.20, "range": [0.05, 0.30], "symbol": "α_TL", "hypothesis": "H2", "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Follow-up continuity positively influences institutional trust.", "tr": "İzlem sürekliliği kurumsal güveni olumlu etkiler."}, "notes": "Part of reinforcing loop R1."},
+    {"id": "H3", "source": "R", "target": "T", "kind": "linear", "sign": 1, "coefficient": 0.10, "range": [0.0, 0.20], "symbol": "α_TR", "hypothesis": "H3", "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Timely institutional processes may positively influence trust.", "tr": "Zamanında yürütülen kurumsal süreçler güveni olumlu etkileyebilir."}, "notes": ""},
+    {"id": "QP-T", "source": "Qp", "target": "T", "kind": "linear", "sign": -1, "coefficient": 0.10, "range": [0.0, 0.20], "symbol": "α_TQ", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Persistent backlog pressure may erode trust.", "tr": "Süregelen birikim baskısı güveni aşındırabilir."}, "notes": ""},
+    {"id": "U-ACC-A", "source": "U_access", "target": "A", "kind": "linear", "sign": 1, "coefficient": 0.30, "range": [0.15, 0.45], "symbol": "α_AU", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Accessibility programme raises target accessibility.", "tr": "Erişilebilirlik programı hedef erişilebilirliği yükseltir."}, "notes": ""},
+    {"id": "SOC-H-A", "source": "H", "target": "A", "kind": "linear", "sign": 1, "coefficient": 0.15, "range": [0.05, 0.25], "symbol": "α_AH", "hypothesis": null, "evidence": "H", "confidence": "low", "references": ["forsberg2023"], "enabled": true, "description": {"en": "A help-seeking culture increases effective use and visibility of support channels.", "tr": "Yardım arama kültürü destek kanallarının etkin kullanımını ve görünürlüğünü artırır."}, "notes": "Part of reinforcing loop R1."},
+    {"id": "U-COORD-K", "source": "U_coordination", "target": "K", "kind": "linear", "sign": 1, "coefficient": 0.30, "range": [0.15, 0.45], "symbol": "α_KU", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Coordination programme raises target coordination.", "tr": "Koordinasyon programı hedef koordinasyonu yükseltir."}, "notes": ""},
+    {"id": "SUP-TR-K", "source": "TR", "target": "K", "kind": "linear", "sign": 1, "coefficient": 0.15, "range": [0.05, 0.25], "symbol": "α_KTR", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Trained staff coordinate more effectively.", "tr": "Eğitimli personel daha etkin koordinasyon sağlar."}, "notes": ""},
+    {"id": "ORG-L-K", "source": "L", "target": "K", "kind": "linear", "sign": 1, "coefficient": 0.10, "range": [0.0, 0.20], "symbol": "α_KL", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Follow-up routines reinforce coordination.", "tr": "İzlem rutinleri koordinasyonu pekiştirir."}, "notes": ""},
+    {"id": "U-CAP-S", "source": "U_capacity", "target": "S", "kind": "linear", "sign": 1, "coefficient": 0.35, "range": [0.20, 0.50], "symbol": "α_SU", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Capacity expansion raises target support capacity (hours).", "tr": "Kapasite artırımı hedef destek kapasitesini (saat) yükseltir."}, "notes": ""},
+    {"id": "EXT-RES-S", "source": "resource_availability", "target": "S", "kind": "linear", "sign": 1, "coefficient": 0.20, "range": [0.10, 0.30], "symbol": "α_Sresource", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Available resources sustain support capacity.", "tr": "Mevcut kaynaklar destek kapasitesini sürdürür."}, "notes": ""},
+    {"id": "QP-S", "source": "Qp", "target": "S", "kind": "linear", "sign": -1, "coefficient": 0.10, "range": [0.0, 0.20], "symbol": "α_SQ", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Sustained backlog strains support staff and erodes effective capacity.", "tr": "Süregelen birikim destek personelini yorar ve etkin kapasiteyi azaltır."}, "notes": "Strain effect. Distinct from the B1 reallocation loop, which acts on processing capacity."},
+    {"id": "EXT-TURN-S", "source": "staff_turnover", "target": "S", "kind": "linear", "sign": -1, "coefficient": 0.10, "range": [0.0, 0.20], "symbol": "γ_S,turnover", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Staff turnover reduces support capacity.", "tr": "Personel devri destek kapasitesini azaltır."}, "notes": ""},
+    {"id": "EXT-TURN-K", "source": "staff_turnover", "target": "K", "kind": "linear", "sign": -1, "coefficient": 0.08, "range": [0.0, 0.15], "symbol": "γ_K,turnover", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Staff turnover disrupts coordination.", "tr": "Personel devri koordinasyonu bozar."}, "notes": ""},
+    {"id": "H7", "source": "TR", "target": "P", "kind": "linear", "sign": 1, "coefficient": 0.20, "range": [0.10, 0.30], "symbol": "α_PTR", "hypothesis": "H7", "evidence": "E2", "confidence": "medium", "references": ["rems2013"], "enabled": true, "description": {"en": "Staff training positively influences operational preparedness.", "tr": "Personel eğitimi operasyonel hazırlığı olumlu etkiler."}, "notes": "Supported by institutional guidance; effect sizes are not established."},
+    {"id": "ENV-M-P", "source": "M", "target": "P", "kind": "linear", "sign": 1, "coefficient": 0.10, "range": [0.0, 0.20], "symbol": "α_PM", "hypothesis": null, "evidence": "E2", "confidence": "low", "references": ["rems2013"], "enabled": true, "description": {"en": "Reliable communication infrastructure supports preparedness.", "tr": "Güvenilir iletişim altyapısı hazırlığı destekler."}, "notes": ""},
+    {"id": "ORG-K-P", "source": "K", "target": "P", "kind": "linear", "sign": 1, "coefficient": 0.15, "range": [0.05, 0.25], "symbol": "α_PK", "hypothesis": null, "evidence": "H", "confidence": "low", "references": ["rems2013"], "enabled": true, "description": {"en": "Coordination supports preparedness.", "tr": "Koordinasyon hazırlığı destekler."}, "notes": ""},
+    {"id": "H8", "source": "IF", "target": "P", "kind": "linear", "sign": 1, "coefficient": 0.15, "range": [0.05, 0.25], "symbol": "α_PIF", "hypothesis": "H8", "evidence": "H", "confidence": "low", "references": ["rems2013"], "enabled": true, "description": {"en": "Improvement follow-through positively influences preparedness.", "tr": "İyileştirme takibi hazırlığı olumlu etkiler."}, "notes": ""},
+    {"id": "H4", "source": "T", "target": "H", "kind": "context_response", "sign": 1, "coefficient": 0.40, "range": [0.20, 0.60], "symbol": "ω_HT", "hypothesis": "H4", "evidence": "E2", "confidence": "medium", "references": ["eliot2010", "williams2006"], "enabled": true, "description": {"en": "Institutional trust may positively influence help-seeking behaviour.", "tr": "Kurumsal güven yardım arama davranışını olumlu etkileyebilir."}, "notes": "Evidence is cross-sectional (perceived support and help-seeking attitudes). Implemented as deviation from the observed path of H. Part of R1."},
+    {"id": "U-TRAIN-TR", "source": "U_training", "target": "TR", "kind": "context_response", "sign": 1, "coefficient": 0.30, "range": [0.15, 0.45], "symbol": "β_TR", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Training programme raises staff training readiness.", "tr": "Eğitim programı personel eğitim hazırlığını yükseltir."}, "notes": ""},
+    {"id": "U-FOLLOW-IF", "source": "U_followthrough", "target": "IF", "kind": "context_response", "sign": 1, "coefficient": 0.35, "range": [0.15, 0.50], "symbol": "β_IF", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Follow-through programme raises completion of improvement actions.", "tr": "Takip programı iyileştirme eylemlerinin tamamlanmasını artırır."}, "notes": ""},
+    {"id": "ORG-K-L", "source": "K", "target": "L", "kind": "derived", "sign": 1, "coefficient": 0.20, "range": [0.10, 0.30], "symbol": "ω_LK", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Coordination supports follow-up continuity.", "tr": "Koordinasyon izlem sürekliliğini destekler."}, "notes": ""},
+    {"id": "SUP-S-L", "source": "S", "target": "L", "kind": "derived", "sign": 1, "coefficient": 0.20, "range": [0.10, 0.30], "symbol": "ω_LS", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Support capacity enables follow-up.", "tr": "Destek kapasitesi izlemeyi mümkün kılar."}, "notes": ""},
+    {"id": "ORG-A-L", "source": "A", "target": "L", "kind": "derived", "sign": 1, "coefficient": 0.10, "range": [0.0, 0.20], "symbol": "ω_LA", "hypothesis": null, "evidence": "H", "confidence": "low", "references": ["forsberg2023"], "enabled": true, "description": {"en": "Accessible channels make follow-up contact easier ('improved access -> better follow-up experience').", "tr": "Erişilebilir kanallar izlem temasını kolaylaştırır ('daha iyi erişim -> daha iyi izlem deneyimi')."}, "notes": "Link of reinforcing loop R1."},
+    {"id": "H9", "source": "Qp", "target": "L", "kind": "derived", "sign": -1, "coefficient": 0.30, "range": [0.15, 0.45], "symbol": "ω_LQ", "hypothesis": "H9", "evidence": "H", "confidence": "medium", "references": ["little1961"], "enabled": true, "description": {"en": "Accumulated operational backlog may negatively influence follow-up continuity.", "tr": "Biriken operasyonel iş yükü izlem sürekliliğini olumsuz etkileyebilir."}, "notes": "Little's law links backlog to waiting time; the effect on follow-up is a hypothesis."},
+    {"id": "FLOW-A-I", "source": "A", "target": "I", "kind": "flow_multiplier", "sign": 1, "coefficient": 0.80, "reference": 0.5, "range": [0.40, 1.20], "symbol": "κ_A", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "More accessible channels surface more (previously unexpressed) support demand. Not an indicator of risk.", "tr": "Daha erişilebilir kanallar daha önce dile getirilmemiş destek talebini görünür kılar. Risk göstergesi değildir."}, "notes": ""},
+    {"id": "FLOW-H-I", "source": "H", "target": "I", "kind": "flow_multiplier", "sign": 1, "coefficient": 0.50, "reference": 0.5, "range": [0.20, 0.80], "symbol": "κ_H", "hypothesis": null, "evidence": "H", "confidence": "low", "references": ["eliot2010"], "enabled": true, "description": {"en": "Greater willingness to seek help increases requests. Not an indicator of risk.", "tr": "Yardım arama isteğinin artması talepleri artırır. Risk göstergesi değildir."}, "notes": ""},
+    {"id": "FLOW-LOAD-I", "source": "academic_load", "target": "I", "kind": "flow_multiplier", "sign": 1, "coefficient": 0.60, "reference": 0.5, "range": [0.20, 1.00], "symbol": "κ_D", "hypothesis": null, "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Seasonal academic load scales generic support demand.", "tr": "Mevsimsel akademik yük genel destek talebini ölçekler."}, "notes": ""},
+    {"id": "H6", "source": "K", "target": "mu", "kind": "flow_multiplier", "sign": 1, "coefficient": 0.60, "reference": 0.5, "range": [0.20, 1.00], "symbol": "η_K", "hypothesis": "H6", "evidence": "H", "confidence": "low", "references": [], "enabled": true, "description": {"en": "Institutional coordination positively influences process efficiency (fewer hours per process).", "tr": "Kurumsal koordinasyon süreç verimliliğini olumlu etkiler (süreç başına daha az saat)."}, "notes": "Efficiency multiplier on processing capacity."},
+    {"id": "B1-GAIN", "source": "Qp", "target": "flex", "kind": "feedback_gain", "sign": 1, "coefficient": 1.00, "range": [0.0, 1.50], "symbol": "β_B1", "hypothesis": null, "evidence": "H", "confidence": "low", "references": ["sterman2000"], "enabled": true, "description": {"en": "Backlog pressure triggers reallocation of support hours (workload-capacity balancing loop B1).", "tr": "Birikim baskısı destek saatlerinin yeniden tahsisini tetikler (iş yükü-kapasite dengeleme döngüsü B1)."}, "notes": "Set to 0 to switch off loop B1."},
+    {"id": "ST-I-Q", "source": "I", "target": "Q", "kind": "structural", "sign": 1, "coefficient": 1.0, "symbol": "+I(t)", "hypothesis": null, "evidence": "E1", "confidence": "high", "references": ["forrester1961", "sterman2000"], "enabled": true, "description": {"en": "Inflow accumulates in the pending stock (mass balance).", "tr": "Giriş akışı bekleyen stokta birikir (kütle dengesi)."}, "notes": "Accounting identity."},
+    {"id": "ST-C-Q", "source": "C_flow", "target": "Q", "kind": "structural", "sign": -1, "coefficient": 1.0, "symbol": "-C_flow(t)", "hypothesis": null, "evidence": "E1", "confidence": "high", "references": ["forrester1961", "sterman2000"], "enabled": true, "description": {"en": "Completed processes leave the pending stock (mass balance).", "tr": "Tamamlanan süreçler bekleyen stoktan çıkar (kütle dengesi)."}, "notes": "Accounting identity."},
+    {"id": "ST-Q-C", "source": "Q", "target": "C_flow", "kind": "structural", "sign": 1, "coefficient": 1.0, "symbol": "min(Q+I, μ)", "hypothesis": null, "evidence": "E1", "confidence": "high", "references": [], "enabled": true, "description": {"en": "Completions cannot exceed available work.", "tr": "Tamamlanan iş mevcut işten fazla olamaz."}, "notes": ""},
+    {"id": "ST-MU-C", "source": "mu", "target": "C_flow", "kind": "structural", "sign": 1, "coefficient": 1.0, "symbol": "min(Q+I, μ)", "hypothesis": null, "evidence": "E1", "confidence": "high", "references": [], "enabled": true, "description": {"en": "Completions cannot exceed processing capacity.", "tr": "Tamamlanan iş işlem kapasitesini aşamaz."}, "notes": ""},
+    {"id": "ST-Q-QP", "source": "Q", "target": "Qp", "kind": "structural", "sign": 1, "coefficient": 1.0, "symbol": "W/(W+w½)", "hypothesis": null, "evidence": "E1", "confidence": "high", "references": ["little1961"], "enabled": true, "description": {"en": "Backlog raises expected waiting time W = Q/μ (Little's law) and therefore backlog pressure.", "tr": "Birikim beklenen bekleme süresini W = Q/μ (Little yasası) ve dolayısıyla birikim baskısını artırır."}, "notes": ""},
+    {"id": "ST-MU-QP", "source": "mu", "target": "Qp", "kind": "structural", "sign": -1, "coefficient": 1.0, "symbol": "W = Q/μ", "hypothesis": null, "evidence": "E1", "confidence": "high", "references": ["little1961"], "enabled": true, "description": {"en": "Higher capacity shortens waiting time.", "tr": "Daha yüksek kapasite bekleme süresini kısaltır."}, "notes": ""},
+    {"id": "ST-S-MU", "source": "S", "target": "mu", "kind": "structural", "sign": 1, "coefficient": 1.0, "symbol": "hours(S)·φ/h", "hypothesis": null, "evidence": "E1", "confidence": "high", "references": [], "enabled": true, "description": {"en": "Support hours (inverse-normalised S) convert to processing capacity.", "tr": "Destek saatleri (ters normalize edilmiş S) işlem kapasitesine dönüşür."}, "notes": "Unit conversion."},
+    {"id": "ST-FLEX-MU", "source": "flex", "target": "mu", "kind": "structural", "sign": 1, "coefficient": 1.0, "symbol": "flex/h", "hypothesis": null, "evidence": "E1", "confidence": "high", "references": [], "enabled": true, "description": {"en": "Reallocated hours add processing capacity.", "tr": "Yeniden tahsis edilen saatler işlem kapasitesi ekler."}, "notes": "Unit conversion."},
+    {"id": "ST-C-R", "source": "C_flow", "target": "R", "kind": "structural", "sign": 1, "coefficient": 1.0, "symbol": "C_flow/(Q+I)", "hypothesis": null, "evidence": "E1", "confidence": "high", "references": [], "enabled": true, "description": {"en": "Timely completion equals the period completion ratio.", "tr": "Zamanında tamamlama, dönem tamamlama oranına eşittir."}, "notes": "Operational definition."},
+    {"id": "ST-Q-R", "source": "Q", "target": "R", "kind": "structural", "sign": -1, "coefficient": 1.0, "symbol": "C_flow/(Q+I)", "hypothesis": null, "evidence": "E1", "confidence": "high", "references": [], "enabled": true, "description": {"en": "Larger open workload lowers the completion ratio for fixed capacity.", "tr": "Sabit kapasitede daha büyük açık iş yükü tamamlama oranını düşürür."}, "notes": "Operational definition."}
+  ],
+  "loops": [
+    {"id": "R1", "polarity": "reinforcing", "edges": ["H4", "SOC-H-A", "ORG-A-L", "H2"], "labels": {"en": "Trust and support loop", "tr": "Güven ve destek döngüsü"}, "description": {"en": "Higher trust -> more help-seeking -> more accessible/used support -> better follow-up -> higher trust.", "tr": "Daha yüksek güven -> daha fazla yardım arama -> daha erişilebilir/kullanılan destek -> daha iyi izlem -> daha yüksek güven."}},
+    {"id": "B1", "polarity": "balancing", "edges": ["ST-Q-QP", "B1-GAIN", "ST-FLEX-MU", "ST-MU-C", "ST-C-Q"], "labels": {"en": "Workload and capacity loop", "tr": "İş yükü ve kapasite döngüsü"}, "description": {"en": "Pending processes -> backlog pressure -> reallocated capacity -> more completions -> reduced backlog.", "tr": "Bekleyen süreçler -> birikim baskısı -> yeniden tahsis edilen kapasite -> daha fazla tamamlama -> azalan birikim."}}
+  ],
+  "parameters": [
+    {"id": "b.E", "group": "baseline", "symbol": "b_E", "value": 0.432000, "min": -1, "max": 1, "range": null, "unit": "normalised", "provenance": "illustrative", "description": {"en": "Baseline intercept of E*.", "tr": "E* sabit terimi."}},
+    {"id": "b.C", "group": "baseline", "symbol": "b_C", "value": 0.306500, "min": -1, "max": 1, "range": null, "unit": "normalised", "provenance": "illustrative", "description": {"en": "Baseline intercept of C*.", "tr": "C* sabit terimi."}},
+    {"id": "b.T", "group": "baseline", "symbol": "b_T", "value": 0.202059, "min": -1, "max": 1, "range": null, "unit": "normalised", "provenance": "illustrative", "description": {"en": "Baseline intercept of T*.", "tr": "T* sabit terimi."}},
+    {"id": "b.A", "group": "baseline", "symbol": "b_A", "value": 0.460000, "min": -1, "max": 1, "range": null, "unit": "normalised", "provenance": "illustrative", "description": {"en": "Baseline intercept of A*.", "tr": "A* sabit terimi."}},
+    {"id": "b.K", "group": "baseline", "symbol": "b_K", "value": 0.498000, "min": -1, "max": 1, "range": null, "unit": "normalised", "provenance": "illustrative", "description": {"en": "Baseline intercept of K*.", "tr": "K* sabit terimi."}},
+    {"id": "b.S", "group": "baseline", "symbol": "b_S", "value": 0.487059, "min": -1, "max": 1, "range": null, "unit": "normalised", "provenance": "illustrative", "description": {"en": "Baseline intercept of S*.", "tr": "S* sabit terimi."}},
+    {"id": "b.P", "group": "baseline", "symbol": "b_P", "value": 0.207500, "min": -1, "max": 1, "range": null, "unit": "normalised", "provenance": "illustrative", "description": {"en": "Baseline intercept of P*.", "tr": "P* sabit terimi."}},
+    {"id": "b.L", "group": "baseline", "symbol": "b_L", "value": 0.396176, "min": -1, "max": 1, "range": null, "unit": "normalised", "provenance": "illustrative", "description": {"en": "Intercept of the follow-up continuity equation.", "tr": "İzlem sürekliliği denkleminin sabit terimi."}},
+    {"id": "lambda.E", "group": "transition", "symbol": "λ_E", "value": 0.30, "min": 0.0, "max": 1.0, "range": [0.15, 0.45], "unit": "1/month", "provenance": "illustrative", "description": {"en": "Monthly adjustment speed of E toward E*.", "tr": "E'nin E*'a aylık uyum hızı."}},
+    {"id": "lambda.C", "group": "transition", "symbol": "λ_C", "value": 0.15, "min": 0.0, "max": 1.0, "range": [0.05, 0.25], "unit": "1/month", "provenance": "illustrative", "description": {"en": "Monthly adjustment speed of belonging (slow-moving climate construct).", "tr": "Aidiyetin aylık uyum hızı (yavaş değişen iklim yapısı)."}},
+    {"id": "lambda.T", "group": "transition", "symbol": "λ_T", "value": 0.20, "min": 0.0, "max": 1.0, "range": [0.10, 0.30], "unit": "1/month", "provenance": "illustrative", "description": {"en": "Monthly adjustment speed of trust.", "tr": "Güvenin aylık uyum hızı."}},
+    {"id": "lambda.A", "group": "transition", "symbol": "λ_A", "value": 0.35, "min": 0.0, "max": 1.0, "range": [0.20, 0.50], "unit": "1/month", "provenance": "illustrative", "description": {"en": "Monthly adjustment speed of accessibility.", "tr": "Erişilebilirliğin aylık uyum hızı."}},
+    {"id": "lambda.K", "group": "transition", "symbol": "λ_K", "value": 0.30, "min": 0.0, "max": 1.0, "range": [0.15, 0.45], "unit": "1/month", "provenance": "illustrative", "description": {"en": "Monthly adjustment speed of coordination.", "tr": "Koordinasyonun aylık uyum hızı."}},
+    {"id": "lambda.S", "group": "transition", "symbol": "λ_S", "value": 0.25, "min": 0.0, "max": 1.0, "range": [0.10, 0.40], "unit": "1/month", "provenance": "illustrative", "description": {"en": "Monthly adjustment speed of support capacity (hiring/allocation delays).", "tr": "Destek kapasitesinin aylık uyum hızı (istihdam/tahsis gecikmeleri)."}},
+    {"id": "lambda.P", "group": "transition", "symbol": "λ_P", "value": 0.25, "min": 0.0, "max": 1.0, "range": [0.10, 0.40], "unit": "1/month", "provenance": "illustrative", "description": {"en": "Monthly adjustment speed of preparedness.", "tr": "Hazırlığın aylık uyum hızı."}},
+    {"id": "lambda.context", "group": "transition", "symbol": "λ_Z", "value": 0.25, "min": 0.0, "max": 1.0, "range": [0.10, 0.40], "unit": "1/month", "provenance": "illustrative", "description": {"en": "Adjustment speed of responsive deviations of context indicators.", "tr": "Bağlam göstergelerinin tepkisel sapmalarının uyum hızı."}},
+    {"id": "flow.I_base", "group": "flow", "symbol": "I_0", "value": 31.048912, "min": 0.0, "max": 1000.0, "range": [24.0, 36.0], "unit": "requests / month", "provenance": "illustrative", "description": {"en": "Generic support demand at reference conditions (all multipliers = 1).", "tr": "Referans koşullarda genel destek talebi (tüm çarpanlar = 1)."}},
+    {"id": "flow.alloc_share", "group": "flow", "symbol": "φ", "value": 0.60, "min": 0.0, "max": 1.0, "range": [0.45, 0.75], "unit": "share", "provenance": "illustrative", "description": {"en": "Share of professional support hours available for support processes.", "tr": "Profesyonel destek saatlerinin destek süreçlerine ayrılabilen payı."}},
+    {"id": "flow.h_proc", "group": "flow", "symbol": "h", "value": 4.0, "min": 0.25, "max": 40.0, "range": [3.0, 5.0], "unit": "hours / process", "provenance": "illustrative", "description": {"en": "Average staff hours required per support process at reference efficiency.", "tr": "Referans verimlilikte süreç başına gereken ortalama personel saati."}},
+    {"id": "flow.w_half", "group": "flow", "symbol": "w½", "value": 0.75, "min": 0.05, "max": 12.0, "range": [0.5, 1.0], "unit": "months", "provenance": "illustrative", "description": {"en": "Expected waiting time at which backlog pressure equals 0.5.", "tr": "Birikim baskısının 0,5'e eşit olduğu beklenen bekleme süresi."}},
+    {"id": "flow.flex_max_hours", "group": "flow", "symbol": "H_flex", "value": 40.0, "min": 0.0, "max": 400.0, "range": [20.0, 60.0], "unit": "hours / month", "provenance": "illustrative", "description": {"en": "Maximum hours that can be reallocated to support processes under backlog pressure.", "tr": "Birikim baskısı altında destek süreçlerine yeniden tahsis edilebilecek en fazla saat."}},
+    {"id": "flow.lambda_flex", "group": "flow", "symbol": "λ_flex", "value": 0.30, "min": 0.0, "max": 1.0, "range": [0.15, 0.45], "unit": "1/month", "provenance": "illustrative", "description": {"en": "Adjustment speed of hour reallocation (managerial response delay).", "tr": "Saat yeniden tahsisinin uyum hızı (yönetsel tepki gecikmesi)."}},
+    {"id": "weights.domain.ENV", "group": "weights", "symbol": "w_ENV", "value": 0.25, "min": 0.0, "max": 1.0, "range": null, "unit": "weight", "provenance": "illustrative", "description": {"en": "Weight of the environmental domain in TOTAL (normalised to sum 1).", "tr": "Çevresel alanın TOPLAM içindeki ağırlığı (toplam 1 olacak biçimde normalize edilir)."}},
+    {"id": "weights.domain.SOC", "group": "weights", "symbol": "w_SOC", "value": 0.25, "min": 0.0, "max": 1.0, "range": null, "unit": "weight", "provenance": "illustrative", "description": {"en": "Weight of the social-climate domain in TOTAL.", "tr": "Sosyal iklim alanının TOPLAM içindeki ağırlığı."}},
+    {"id": "weights.domain.ORG", "group": "weights", "symbol": "w_ORG", "value": 0.25, "min": 0.0, "max": 1.0, "range": null, "unit": "weight", "provenance": "illustrative", "description": {"en": "Weight of the organisational domain in TOTAL.", "tr": "Örgütsel alanın TOPLAM içindeki ağırlığı."}},
+    {"id": "weights.domain.SUP", "group": "weights", "symbol": "w_SUP", "value": 0.25, "min": 0.0, "max": 1.0, "range": null, "unit": "weight", "provenance": "illustrative", "description": {"en": "Weight of the support domain in TOTAL.", "tr": "Destek alanının TOPLAM içindeki ağırlığı."}},
+    {"id": "cost.U_environment", "group": "cost", "symbol": "c_env", "value": 30.0, "min": 0.0, "max": 1000.0, "range": null, "unit": "staff-hours / month at intensity 1", "provenance": "illustrative", "description": {"en": "Illustrative resource requirement of the environmental programme.", "tr": "Çevresel programın açıklayıcı kaynak gereksinimi."}},
+    {"id": "cost.U_access", "group": "cost", "symbol": "c_access", "value": 20.0, "min": 0.0, "max": 1000.0, "range": null, "unit": "staff-hours / month at intensity 1", "provenance": "illustrative", "description": {"en": "Illustrative resource requirement of the accessibility programme.", "tr": "Erişilebilirlik programının açıklayıcı kaynak gereksinimi."}},
+    {"id": "cost.U_coordination", "group": "cost", "symbol": "c_coord", "value": 16.0, "min": 0.0, "max": 1000.0, "range": null, "unit": "staff-hours / month at intensity 1", "provenance": "illustrative", "description": {"en": "Illustrative resource requirement of the coordination programme.", "tr": "Koordinasyon programının açıklayıcı kaynak gereksinimi."}},
+    {"id": "cost.U_capacity", "group": "cost", "symbol": "c_cap", "value": 80.0, "min": 0.0, "max": 1000.0, "range": null, "unit": "staff-hours / month at intensity 1", "provenance": "illustrative", "description": {"en": "Illustrative resource requirement of capacity expansion.", "tr": "Kapasite artırımının açıklayıcı kaynak gereksinimi."}},
+    {"id": "cost.U_training", "group": "cost", "symbol": "c_train", "value": 24.0, "min": 0.0, "max": 1000.0, "range": null, "unit": "staff-hours / month at intensity 1", "provenance": "illustrative", "description": {"en": "Illustrative resource requirement of the training programme.", "tr": "Eğitim programının açıklayıcı kaynak gereksinimi."}},
+    {"id": "cost.U_followthrough", "group": "cost", "symbol": "c_follow", "value": 12.0, "min": 0.0, "max": 1000.0, "range": null, "unit": "staff-hours / month at intensity 1", "provenance": "illustrative", "description": {"en": "Illustrative resource requirement of the follow-through programme.", "tr": "Takip programının açıklayıcı kaynak gereksinimi."}}
+  ],
+  "transition_offdiagonal": [],
+  "variable_weights": {"E": 1, "F": 1, "O": 1, "M": 1, "C": 1, "T": 1, "J": 1, "H": 1, "A": 1, "R": 1, "L": 1, "K": 1, "S": 1, "TR": 1, "P": 1, "IF": 1},
+  "initial_stock": {"Q": 22.603608, "flex": "equilibrium"},
+  "validation_envelope": {
+    "supported_variable_range": [0.0, 1.0],
+    "supported_school_contexts": {"en": "Single primary or secondary school treated as one institution; monthly aggregate indicators only.", "tr": "Tek bir kurum olarak ele alınan tek ilk/ortaokul veya lise; yalnızca aylık toplulaştırılmış göstergeler."},
+    "validated_horizon_months": 0,
+    "data_frequency": "monthly",
+    "statement": {"en": "No part of this parameter set has been validated against real school data. The validated horizon is therefore 0 months.", "tr": "Bu parametre setinin hiçbir kısmı gerçek okul verisine karşı doğrulanmamıştır. Bu nedenle doğrulanmış ufuk 0 aydır."}
+  }
+}

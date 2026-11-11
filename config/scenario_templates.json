@@ -1,0 +1,54 @@
+{
+  "_comment": "Illustrative what-if templates. Intensities, start months and ramp-up times are editable demonstration values, NOT tested real-world interventions. All templates inherit initial conditions, external conditions and parameters from the baseline so that they differ only in their intervention inputs.",
+  "templates": [
+    {
+      "id": "S0", "is_baseline": true,
+      "name": "S0 — Baseline",
+      "labels": {"en": "S0 — Baseline", "tr": "S0 — Referans (Temel)"},
+      "description": {"en": "No additional interventions. Reference scenario for all comparisons.", "tr": "Ek müdahale yok. Tüm karşılaştırmalar için referans senaryo."},
+      "interventions": []
+    },
+    {
+      "id": "S1", "is_baseline": false,
+      "name": "S1 — Accessibility Improvement",
+      "labels": {"en": "S1 — Accessibility Improvement", "tr": "S1 — Erişilebilirlik İyileştirmesi"},
+      "description": {"en": "Improve support-channel accessibility and usability.", "tr": "Destek kanallarının erişilebilirliğini ve kullanılabilirliğini iyileştirme."},
+      "interventions": [
+        {"key": "U_access", "intensity": 0.6, "start_month": 1, "ramp_months": 3, "end_month": null}
+      ]
+    },
+    {
+      "id": "S2", "is_baseline": false,
+      "name": "S2 — Organizational Preparedness",
+      "labels": {"en": "S2 — Organizational Preparedness", "tr": "S2 — Örgütsel Hazırlık"},
+      "description": {"en": "Improve staff training, coordination and process follow-through.", "tr": "Personel eğitimi, koordinasyon ve süreç takibini iyileştirme."},
+      "interventions": [
+        {"key": "U_training", "intensity": 0.6, "start_month": 1, "ramp_months": 4, "end_month": null},
+        {"key": "U_coordination", "intensity": 0.5, "start_month": 1, "ramp_months": 4, "end_month": null},
+        {"key": "U_followthrough", "intensity": 0.5, "start_month": 2, "ramp_months": 4, "end_month": null}
+      ]
+    },
+    {
+      "id": "S3", "is_baseline": false,
+      "name": "S3 — Support Capacity Expansion",
+      "labels": {"en": "S3 — Support Capacity Expansion", "tr": "S3 — Destek Kapasitesi Artırımı"},
+      "description": {"en": "Improve institutional support capacity.", "tr": "Kurumsal destek kapasitesini artırma."},
+      "interventions": [
+        {"key": "U_capacity", "intensity": 0.6, "start_month": 1, "ramp_months": 3, "end_month": null}
+      ]
+    },
+    {
+      "id": "S4", "is_baseline": false,
+      "name": "S4 — Integrated Prevention",
+      "labels": {"en": "S4 — Integrated Prevention", "tr": "S4 — Bütünleşik Önleme"},
+      "description": {"en": "Combination of S1, S2 and S3.", "tr": "S1, S2 ve S3'ün birleşimi."},
+      "interventions": [
+        {"key": "U_access", "intensity": 0.6, "start_month": 1, "ramp_months": 3, "end_month": null},
+        {"key": "U_training", "intensity": 0.6, "start_month": 1, "ramp_months": 4, "end_month": null},
+        {"key": "U_coordination", "intensity": 0.5, "start_month": 1, "ramp_months": 4, "end_month": null},
+        {"key": "U_followthrough", "intensity": 0.5, "start_month": 2, "ramp_months": 4, "end_month": null},
+        {"key": "U_capacity", "intensity": 0.6, "start_month": 1, "ramp_months": 3, "end_month": null}
+      ]
+    }
+  ]
+}
