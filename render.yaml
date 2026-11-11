@@ -1,0 +1,17 @@
+# Render blueprint for the Python simulation engine (frontend deploys to Vercel).
+# The persistent disk keeps the SQLite scenario store across deploys.
+services:
+  - type: web
+    name: ssrdt-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: TWIN_ALLOWED_ORIGINS
+        sync: false   # e.g. https://your-frontend.vercel.app
+    disk:
+      name: twin-data
+      mountPath: /data
+      sizeGB: 1

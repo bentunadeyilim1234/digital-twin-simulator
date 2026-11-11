@@ -1,0 +1,17 @@
+# Full local stack: docker compose up --build  ->  http://localhost:3000
+services:
+  api:
+    build: { context: ., dockerfile: backend/Dockerfile }
+    environment:
+      TWIN_ALLOWED_ORIGINS: http://localhost:3000
+    volumes:
+      - twin-data:/data
+    ports: ["8000:8000"]
+  web:
+    build: { context: ./frontend, args: { BACKEND_URL: "http://api:8000" } }
+    environment:
+      BACKEND_URL: http://api:8000
+    depends_on: [api]
+    ports: ["3000:3000"]
+volumes:
+  twin-data:
