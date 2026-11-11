@@ -178,3 +178,14 @@ def test_exports_and_project_roundtrip_persistence(client, tmp_db):
     assert r["scenarios"] == len(proj["scenarios"])
     assert any(s["name"] == "Persist me" for s in other.get("/api/scenarios").json())
     assert other.post("/api/import/project", json={"format": "nope"}).status_code == 422
+
+
+def test_concurrent_first_requests_seed_once(tmp_db):
+    """A new browser fires several requests in parallel; the workspace must be seeded exactly once."""
+    from concurrent.futures import ThreadPoolExecutor
+    from api.main import app
+    c = TestClient(app, headers={"X-Workspace-Id": "race-ws"})
+    with ThreadPoolExecutor(max_workers=6) as ex:
+        list(ex.map(lambda p: c.get(p), ["/api/meta", "/api/model", "/api/scenarios", "/api/datasets", "/api/overview", "/api/scenarios"]))
+    assert len(c.get("/api/scenarios").json()) == 5
+    assert len(c.get("/api/datasets").json()) == 1

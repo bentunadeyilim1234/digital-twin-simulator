@@ -12,6 +12,7 @@ import io
 import json
 import os
 import re
+import threading
 from datetime import datetime, timezone
 from functools import lru_cache
 from typing import Any, Literal, Optional
@@ -71,12 +72,21 @@ async def _runtime_error(_: Request, exc: RuntimeError) -> JSONResponse:
 
 
 # ----------------------------------------------------------------------------- workspace
+_SEED_LOCK = threading.Lock()
+
+
 def _seed(ws: str) -> None:
+    """Idempotent, race-free seeding (parallel first requests from a new browser)."""
+    with _SEED_LOCK:
+        row = db.get_workspace(ws)
+        if row is not None and row["seeded"]:
+            return
+        _seed_unlocked(ws)
+
+
+def _seed_unlocked(ws: str) -> None:
     cfg = default_config()
     db.create_workspace(ws, cfg)
-    row = db.get_workspace(ws)
-    if row is not None and row["seeded"]:
-        return
     for t in templates():
         sc = instantiate_template(cfg, t["id"])
         sc["labels"] = t["labels"]
@@ -825,6 +835,25 @@ def normalize_values(body: NormBody, ws: str = Depends(workspace)) -> dict[str, 
     return {"normalized": to_json_list(normalize_series(body.values, spec)), "spec": spec.__dict__}
 
 
+class DenormBody(BaseModel):
+    values: dict[str, Optional[float]]
+
+
+@app.post("/api/denormalize")
+def denormalize_values(body: DenormBody, ws: str = Depends(workspace)) -> dict[str, Any]:
+    """Raw-unit equivalents of normalised values, using the configured reference bounds."""
+    from twin_engine.normalization import denormalize
+    meta = {v["symbol"]: v["measurement"] for v in _cfg(ws)["variables"]}
+    out = {}
+    for sym, z in body.values.items():
+        if sym not in meta:
+            raise HTTPException(404, f"unknown variable {sym}")
+        m = meta[sym]
+        raw = denormalize(z, NormSpec(m["lower"], m["upper"], m["direction"]))
+        out[sym] = {"raw": None if raw != raw else raw, "unit": m["unit"], "lower": m["lower"], "upper": m["upper"], "direction": m["direction"]}
+    return out
+
+
 # ----------------------------------------------------------------------------- overview
 @app.get("/api/overview")
 def overview(ws: str = Depends(workspace)) -> dict[str, Any]:
@@ -904,8 +933,9 @@ def import_project(body: dict[str, Any], ws: str = Depends(workspace)) -> dict[s
 
 @app.post("/api/workspace/reset")
 def workspace_reset(ws: str = Depends(workspace)) -> dict[str, Any]:
-    db.reset_workspace(ws)
-    _seed(ws)
+    with _SEED_LOCK:
+        db.reset_workspace(ws)
+        _seed_unlocked(ws)
     return {"reset": ws}
 
 

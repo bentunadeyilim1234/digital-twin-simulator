@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+/*
+ * Dark engineering-console design tokens. Chart series colours are the validated dark
+ * categorical palette (checked against --color-panel #12161c: lightness band, chroma,
+ * CVD ΔE ≥ 8.4 adjacent, normal-vision ΔE ≥ 19.3, contrast ≥ 3:1).
+ */
+@theme {
+  --color-plane: #0b0e12;
+  --color-panel: #12161c;
+  --color-panel-2: #181d24;
+  --color-panel-3: #1f252e;
+  --color-line: #252c36;
+  --color-line-strong: #39414c;
+  --color-ink: #e8ebef;
+  --color-ink-2: #b4bcc7;
+  --color-muted: #828c99;
+  --color-accent: #3987e5;
+  --color-accent-strong: #5598e7;
+  --color-warm: #e0a040;
+  --color-good: #0ca30c;
+  --color-warning: #fab219;
+  --color-serious: #ec835a;
+  --color-critical: #d03b3b;
+  --color-s1: #3987e5;
+  --color-s2: #d95926;
+  --color-s3: #199e70;
+  --color-s4: #c98500;
+  --color-s5: #d55181;
+  --color-s6: #008300;
+  --color-s7: #9085e9;
+  --color-s8: #e66767;
+  --color-pos: #3987e5;
+  --color-neg: #e66767;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+:root {
+  color-scheme: dark;
+  --grid: #222831;
+  --axis: #39414c;
+}
+
+html,
+body {
+  background: var(--color-plane);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus visibility for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Scrollbars that do not shout */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2c3440 transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Recharts tooltip reset */
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+.recharts-cartesian-axis-tick-value {
+  font-variant-numeric: tabular-nums;
+}
