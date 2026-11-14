@@ -66,7 +66,7 @@ intervention schedules (intensity 0–1, start month, ramp-up months, optional e
 external-condition values or schedules, parameter overrides, dataset selection (start from
 latest observation, or replay observed context) and notes.
 
-Templates S0–S4 (`config/scenario_templates.json`) are illustrative and editable:
+Templates S0–S4 (`backend/config/scenario_templates.json`) are illustrative and editable:
 
 | ID | Interventions |
 |---|---|

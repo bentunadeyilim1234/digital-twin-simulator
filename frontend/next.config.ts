@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
-// All /api/* requests are proxied to the Python simulation engine, so the browser only
-// ever talks to its own origin (no CORS, no third-party calls). BACKEND_URL is set per
-// deployment (e.g. the Render/Fly/Docker URL of the FastAPI service).
+// The browser only calls same-origin /api/*. On Vercel the top-level rewrite in
+// vercel.json routes /api/* to the backend service, so this proxy is only for running
+// Next.js on its own (scripts/dev.sh, docker-compose), where BACKEND_URL points at FastAPI.
 const backend = process.env.BACKEND_URL || "http://127.0.0.1:8000";
 
 const nextConfig: NextConfig = {
@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1", "localhost"],
   devIndicators: false,
   async rewrites() {
+    if (process.env.VERCEL) return [];
     return [{ source: "/api/:path*", destination: `${backend}/api/:path*` }];
   },
   async headers() {

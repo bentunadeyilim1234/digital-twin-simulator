@@ -19,7 +19,7 @@ def config_dir() -> Path:
     env = os.environ.get("TWIN_CONFIG_DIR")
     if env:
         return Path(env)
-    # backend/twin_engine/config.py -> repo/config
+    # backend/twin_engine/config.py -> backend/config
     here = Path(__file__).resolve()
     for parent in here.parents:
         cand = parent / "config" / "model_config.json"

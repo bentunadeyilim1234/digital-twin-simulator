@@ -17,7 +17,7 @@ and inspect an illustrative 3D school linked to the simulation outputs.
 
 | Capability | Where |
 |---|---|
-| 16 variables in 4 domains, model-calculated / manual-override modes | Variables page, `config/model_config.json` |
+| 16 variables in 4 domains, model-calculated / manual-override modes | Variables page, `backend/config/model_config.json` |
 | Editable causal graph (H1–H10 + supporting relationships, evidence classes, loops R1/B1, custom edges) driving the same matrices the simulator uses | Causal Model page |
 | Deterministic monthly engine: `X(t+1) = clip[X + Λ(X* − X)]`, `X* = clip[b + AX + ΓZ + ΠY + BU + GD]` | `backend/twin_engine/simulator.py` |
 | Stock-flow support-process block with capacity constraint and mass balance | Lab → Stock & flow |
@@ -65,14 +65,17 @@ docker compose up --build
 
 ## Hosted deployment
 
-The frontend and the Python engine are deployed separately; the browser only talks to the
-frontend origin, which proxies `/api/*` to the engine.
+**Vercel (one project, two services)** — `vercel.json` at the repository root defines a
+`frontend` service (Next.js, `frontend/`) and a `backend` service (FastAPI, `backend/`,
+entrypoint `api.main:app`). Requests to `/api/*` go to the backend, everything else to the
+frontend, on one domain; the browser only calls same-origin `/api/*`. Import the repository
+with the project root at the repository root and test locally with `vercel dev`.
+On Vercel the SQLite store lives in `/tmp`, which is per instance and not durable: saved
+scenarios and model edits can disappear on cold starts until a hosted database is added.
 
-1. **Engine** — deploy `backend/Dockerfile` (build context = repository root). A Render
-   blueprint (`render.yaml`) with a persistent disk for SQLite is included.
-   Environment: `TWIN_ALLOWED_ORIGINS` (frontend URL), optional `TWIN_DB_PATH`.
-2. **Frontend** — on Vercel, import the repository with **Root Directory = `frontend`** and set
-   `BACKEND_URL` to the engine URL (e.g. `https://ssrdt-api.onrender.com`).
+**Alternative (separate hosts)** — deploy `backend/Dockerfile` (build context = repository
+root; `render.yaml` is a Render blueprint with a persistent disk) and run the frontend with
+`BACKEND_URL` set to the engine URL; Next.js then proxies `/api/*` to it.
 
 The workspace id sent by browsers separates scenario libraries but is **not authentication**;
 add access control before importing authorised school data (see `docs/DATA_GOVERNANCE.md`).
@@ -98,8 +101,8 @@ export results → reload and verify persistence.
 ## Repository layout
 
 ```text
-config/            authoritative model configuration, scenario templates, reference registry
 backend/
+  config/          authoritative model configuration, scenario templates, reference registry
   twin_engine/     simulation engine and analytics (no web dependencies)
   api/             FastAPI service + SQLite persistence
   tests/           pytest suites
@@ -127,7 +130,7 @@ scripts/           dev/test runners, baseline anchoring, documentation generator
 | [ARCHITECTURE](docs/ARCHITECTURE.md) | components, principles, persistence, testing, deployment |
 | [LIMITATIONS](docs/LIMITATIONS.md) | what the model cannot do and known weaknesses |
 
-After changing `config/model_config.json`, regenerate the derived documentation:
+After changing `backend/config/model_config.json`, regenerate the derived documentation:
 
 ```bash
 backend/.venv/bin/python scripts/generate_docs.py

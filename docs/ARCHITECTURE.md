@@ -27,13 +27,13 @@
                          │ calibration · validation                           │
                          └──────────────────────┬────────────────────────────┘
                                                 │ reads
-                         config/model_config.json · scenario_templates.json · references.json
+                         backend/config/model_config.json · scenario_templates.json · references.json
 ```
 
 ## Principles
 
 1. **One authoritative configuration.** Variables, relationships, parameters, loops and
-   templates live in `config/`. The simulator, causal graph, variables page, parameter
+   templates live in `backend/config/`. The simulator, causal graph, variables page, parameter
    registry, equations and generated documentation all read it.
 2. **One implementation of the mathematics.** `twin_engine` has no web dependencies. The
    frontend performs no model calculations: it formats numbers, maps values to colours, and

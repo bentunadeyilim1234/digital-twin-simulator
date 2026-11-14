@@ -83,7 +83,7 @@ def write(path: Path, res: dict) -> None:
 
 
 if __name__ == "__main__":
-    path = ROOT / "config" / "model_config.json"
+    path = ROOT / "backend" / "config" / "model_config.json"
     cfg = validate_config(json.loads(path.read_text(encoding="utf-8")))
     res = derive(cfg)
     print(json.dumps(res, indent=2))

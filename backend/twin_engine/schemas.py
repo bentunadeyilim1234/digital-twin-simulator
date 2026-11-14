@@ -1,6 +1,6 @@
 """Typed schemas for the authoritative model configuration and for scenarios.
 
-The JSON file ``config/model_config.json`` is validated against :class:`ModelConfig`.
+The JSON file ``backend/config/model_config.json`` is validated against :class:`ModelConfig`.
 Validation is strict: unknown edge endpoints, invalid edge kinds, out-of-range
 coefficients and inconsistent weights are rejected with actionable messages.
 """

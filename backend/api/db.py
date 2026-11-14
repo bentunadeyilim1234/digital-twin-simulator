@@ -39,7 +39,10 @@ def new_id(prefix: str) -> str:
 
 
 def db_path() -> Path:
-    p = Path(os.environ.get("TWIN_DB_PATH", Path(__file__).resolve().parents[1] / "data" / "twin.sqlite3"))
+    # Vercel functions may only write to /tmp.
+    # shortcut: /tmp is per-instance and wiped on cold start, so saved scenarios are not durable on Vercel; move to a hosted DB for real use.
+    default = Path("/tmp/twin.sqlite3") if os.environ.get("VERCEL") else Path(__file__).resolve().parents[1] / "data" / "twin.sqlite3"
+    p = Path(os.environ.get("TWIN_DB_PATH", default))
     p.parent.mkdir(parents=True, exist_ok=True)
     return p
 

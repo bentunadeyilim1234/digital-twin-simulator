@@ -51,7 +51,7 @@ X*(t)   = clip[ b + A·X(t) + Γ·Z(t) + Π·Y(t) + B·U(t) + G·D(t), 0, 1 ]
   enters through an explicit block **Π**; equivalently Γ̃ = [Γ Π] acts on the augmented
   observed/derived vector Z̃ = [Z; Y]. The research meaning is unchanged.
 
-Every enabled relationship in `config/model_config.json` is compiled into exactly one matrix
+Every enabled relationship in `backend/config/model_config.json` is compiled into exactly one matrix
 cell (`twin_engine/model.py`); the test `test_every_coefficient_lands_in_exactly_one_cell`
 checks this. Disabled relationships contribute zero.
 
