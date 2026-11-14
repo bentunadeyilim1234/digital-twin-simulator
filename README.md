@@ -70,6 +70,9 @@ docker compose up --build
 entrypoint `api.main:app`). Requests to `/api/*` go to the backend, everything else to the
 frontend, on one domain; the browser only calls same-origin `/api/*`. Import the repository
 with the project root at the repository root and test locally with `vercel dev`.
+Vercel installs backend dependencies from `backend/pyproject.toml`, which drops SALib's
+unused matplotlib dependency (`tool.uv.override-dependencies`) to stay under the function
+size limit; `backend/requirements.txt` (Docker, local dev) must list the same packages.
 On Vercel the SQLite store lives in `/tmp`, which is per instance and not durable: saved
 scenarios and model edits can disappear on cold starts until a hosted database is added.
 
@@ -88,7 +91,7 @@ scripts/test_all.sh
 
 | Suite | Command | Count |
 |---|---|---|
-| Engine, analytics, API (pytest) | `cd backend && .venv/bin/python -m pytest -q` | 89 |
+| Engine, analytics, API (pytest) | `cd backend && .venv/bin/python -m pytest -q` | 91 |
 | Frontend units (vitest) | `cd frontend && npx vitest run` | 15 |
 | Type check | `cd frontend && npx tsc --noEmit` | — |
 | End-to-end (Playwright, real stack) | `cd frontend && npx playwright test --trace off` | 5 specs |

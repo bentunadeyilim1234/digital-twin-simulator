@@ -68,8 +68,8 @@ atomically with S0–S4 and a synthetic dataset.
 
 | Layer | Tool | Location |
 |---|---|---|
-| Engine & analytics | pytest (75) | `backend/tests/test_engine.py`, `test_analytics.py` |
-| API & persistence | pytest + TestClient (14) | `backend/tests/test_api.py` |
+| Engine & analytics | pytest (76) | `backend/tests/test_engine.py`, `test_analytics.py` |
+| API & persistence | pytest + TestClient (15) | `backend/tests/test_api.py` |
 | Frontend units | vitest + Testing Library (15) | `frontend/tests` |
 | End-to-end | Playwright (5 specs, real stack) | `frontend/e2e` |
 

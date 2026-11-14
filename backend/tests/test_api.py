@@ -194,3 +194,13 @@ def test_concurrent_first_requests_seed_once(tmp_db):
 def test_seeded_dataset_has_quality_report(client):
     ds = client.get("/api/datasets").json()
     assert ds[0]["quality"] and ds[0]["quality"]["n_periods"] == 36
+
+
+def test_deps_in_sync():
+    """requirements.txt (Docker/dev) and pyproject.toml (Vercel) must list the same runtime packages."""
+    import tomllib
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    req = [l.strip() for l in (root / "requirements.txt").read_text().splitlines() if l.strip() and not l.startswith("#")]
+    proj = tomllib.loads((root / "pyproject.toml").read_text())["project"]["dependencies"]
+    assert sorted(req) == sorted(proj)

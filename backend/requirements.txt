@@ -1,4 +1,4 @@
-# Runtime
+# Runtime (Docker / local dev). Vercel installs from pyproject.toml; keep both lists identical (test_deps_in_sync).
 numpy>=2.1,<3
 scipy>=1.14
 pandas>=2.2
