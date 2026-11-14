@@ -1,3 +1,4 @@
 -r requirements.txt
 pytest>=8.3
+statsmodels>=0.14.4  # reference implementation for test_ols_hac_matches_statsmodels
 httpx>=0.27

@@ -216,12 +216,27 @@ def historical_validation(cfg: dict[str, Any], dataset: dict[str, Any], holdout:
                         if dataset.get("data_class") == "SYNTHETIC" else None})
 
 
+def ols_hac(y: np.ndarray, X: np.ndarray, maxlags: int = 2) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """OLS with Newey-West (Bartlett kernel) HAC covariance (no small-sample correction); normal-theory
+    95% CI and p-values. Equivalent to statsmodels OLS.fit(cov_type="HAC", cov_kwds={"maxlags": ...})
+    (checked in tests) without the 50 MB dependency."""
+    from scipy.stats import norm
+    xtx_inv = np.linalg.pinv(X.T @ X)
+    params = xtx_inv @ X.T @ y
+    xu = X * (y - X @ params)[:, None]
+    S = xu.T @ xu
+    for lag in range(1, maxlags + 1):
+        g = xu[lag:].T @ xu[:-lag]
+        S += (1 - lag / (maxlags + 1)) * (g + g.T)
+    se = np.sqrt(np.diag(xtx_inv @ S @ xtx_inv))
+    z = norm.ppf(0.975)
+    return params, np.column_stack([params - z * se, params + z * se]), 2 * norm.sf(np.abs(params / se))
+
+
 def intervention_validation(cfg: dict[str, Any], dataset: dict[str, Any], variable: str,
                             intervention_period: int, intervention: Optional[dict[str, Any]] = None) -> dict[str, Any]:
     """Interrupted time series (segmented regression with Newey-West errors) on the observed
     aggregate, compared with the model-implied change relative to a no-intervention replay."""
-    import statsmodels.api as sm
-
     n = len(dataset["periods"])
     if variable not in ALL_VARS:
         raise ValueError(f"unknown variable {variable}")
@@ -235,10 +250,9 @@ def intervention_validation(cfg: dict[str, Any], dataset: dict[str, Any], variab
     post = (t >= intervention_period).astype(float)
     X = np.column_stack([np.ones(n), t, post, (t - intervention_period) * post])
     ok = np.isfinite(y)
-    fit = sm.OLS(y[ok], X[ok]).fit(cov_type="HAC", cov_kwds={"maxlags": 2})
-    ci = fit.conf_int(alpha=0.05)
+    params, ci, pvalues = ols_hac(y[ok], X[ok], maxlags=2)
     post_t = t[(t >= intervention_period)] - intervention_period
-    observed_change = float(fit.params[2] + fit.params[3] * post_t.mean())
+    observed_change = float(params[2] + params[3] * post_t.mean())
 
     # Model-implied change: replay with recorded interventions vs counterfactual without them
     m, rs = replay_setup(cfg, dataset, n)
@@ -255,9 +269,9 @@ def intervention_validation(cfg: dict[str, Any], dataset: dict[str, Any], variab
     return nan_to_none({
         "variable": variable, "intervention_period": intervention_period,
         "intervention_period_label": dataset["periods"][intervention_period],
-        "its": {"level_change": float(fit.params[2]), "level_change_ci95": ci[2].tolist(), "level_change_p": float(fit.pvalues[2]),
-                "slope_change": float(fit.params[3]), "slope_change_ci95": ci[3].tolist(), "slope_change_p": float(fit.pvalues[3]),
-                "pre_slope": float(fit.params[1]), "n_pre": int(ok[: intervention_period].sum()), "n_post": int(ok[intervention_period:].sum()),
+        "its": {"level_change": float(params[2]), "level_change_ci95": ci[2].tolist(), "level_change_p": float(pvalues[2]),
+                "slope_change": float(params[3]), "slope_change_ci95": ci[3].tolist(), "slope_change_p": float(pvalues[3]),
+                "pre_slope": float(params[1]), "n_pre": int(ok[: intervention_period].sum()), "n_post": int(ok[intervention_period:].sum()),
                 "observed_mean_post_change": observed_change},
         "model": {"mean_post_change_vs_counterfactual": model_change, "intervention_inputs_present": had_iv},
         "agreement": {"same_direction": (np.sign(observed_change) == np.sign(model_change)) if had_iv else None,

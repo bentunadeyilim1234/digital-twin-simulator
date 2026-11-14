@@ -131,7 +131,7 @@ def _dataset_or_404(ws: str, did: Optional[str]) -> Optional[dict[str, Any]]:
 @app.get("/api/health")
 def health() -> dict[str, Any]:
     return {"status": "ok", "engine_version": ENGINE_VERSION,
-            "capabilities": {"salib": SALIB_AVAILABLE, "statsmodels": importlib.util.find_spec("statsmodels") is not None,
+            "capabilities": {"salib": SALIB_AVAILABLE,
                              "pymc": PYMC_AVAILABLE, "bayesian_backend": "numpy-adaptive-metropolis"}}
 
 

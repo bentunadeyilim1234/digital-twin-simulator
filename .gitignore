@@ -30,3 +30,4 @@ next-env.d.ts
 
 # Vercel CLI local state
 .vercel/
+backend/_uv/

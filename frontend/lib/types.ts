@@ -215,6 +215,6 @@ export interface Meta {
   default_calibration_params: string[];
   default_bayes_params: string[];
   uncertain_parameters: string[];
-  capabilities: { salib: boolean; statsmodels: boolean; pymc: boolean; bayesian_backend: string };
+  capabilities: { salib: boolean; pymc: boolean; bayesian_backend: string };
   workspace: string;
 }

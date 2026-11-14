@@ -222,3 +222,19 @@ def test_historical_and_intervention_validation(cfg, ds):
     assert "level_change" in iv["its"] and iv["model"]["intervention_inputs_present"]
     rep = build_report(cfg, [ds], h)
     assert "Validation Report" in rep["markdown"] and rep["verification"]["all_passed"]
+
+
+def test_ols_hac_matches_statsmodels():
+    sm = pytest.importorskip("statsmodels.api")  # dev-only dependency, not deployed
+    from twin_engine.validation import ols_hac
+    rng = np.random.default_rng(1)
+    n = 30
+    t = np.arange(n, dtype=float)
+    post = (t >= 18).astype(float)
+    X = np.column_stack([np.ones(n), t, post, (t - 18) * post])
+    y = 0.5 + 0.002 * t + 0.03 * post + rng.normal(0, 0.02, n).cumsum() * 0.3
+    ref = sm.OLS(y, X).fit(cov_type="HAC", cov_kwds={"maxlags": 2})
+    params, ci, pvalues = ols_hac(y, X, maxlags=2)
+    np.testing.assert_allclose(params, ref.params, atol=1e-12)
+    np.testing.assert_allclose(ci, ref.conf_int(), atol=1e-12)
+    np.testing.assert_allclose(pvalues, ref.pvalues, atol=1e-12)
